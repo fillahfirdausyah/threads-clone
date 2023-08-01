@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { SendIcon } from '@components/icons/SendIcon';
 const RootLayoutNewThreads = ({ children }) => {
   return (
     <>
@@ -21,11 +22,7 @@ const RootLayoutNewThreads = ({ children }) => {
       {children}
       <nav className="max-w-xl mx-auto fixed z-10 bottom-0 right-0 left-0 p-4 flex border-t-[1px] border-opacity-60 justify-between border-t-white bg-threads-bg">
         <p className="text-threads-white">Post Thread</p>
-        <Image
-          src={'/Assets/icon/Outline/Communication/Send.svg'}
-          width={30}
-          height={30}
-        />
+        <SendIcon width={30} height={30} />
       </nav>
     </>
   );
