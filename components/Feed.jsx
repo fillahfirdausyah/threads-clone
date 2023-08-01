@@ -2,7 +2,7 @@ import PostCard from './PostCard';
 
 const Feed = () => {
   return (
-    <div className="w-full mt-6 mb-16">
+    <div className="w-full mb-16 lg:mt-28">
       <PostCard
         post={{
           username: 'PixelPilot4',
