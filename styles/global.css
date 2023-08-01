@@ -12,6 +12,12 @@
   border-top: 0.5px solid rgba(243, 245, 247, 0.15);
 }
 
+.tab-active {
+  font-weight: bold;
+  border-bottom: 2px solid #fffffe;
+  color: #fffffe !important;
+  z-index: 10;
+}
 /* .main {
   width: 100vw;
   min-height: 100vh;
