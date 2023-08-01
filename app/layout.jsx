@@ -1,5 +1,6 @@
+'use client';
 import '@styles/global.css';
-
+import { usePathname } from 'next/navigation';
 import Navbar from '@components/Navbar';
 
 export const metadata = {
@@ -8,9 +9,13 @@ export const metadata = {
 };
 
 const RootLayout = ({ children }) => {
+  const pathname = usePathname();
   return (
     <html lang="en" className="bg-threads-bg">
-      <body>{children}</body>
+      <body className="font-lato">
+        {pathname === '/new-threads' ? null : <Navbar />}
+        <div className="px-2 relative">{children}</div>
+      </body>
     </html>
   );
 };
