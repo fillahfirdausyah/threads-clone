@@ -43,7 +43,7 @@ const Navbar = () => {
               color={pathname === '/' ? '#7F5AF0' : '#fff'}
             />
           </Link>
-          <Link href={'/'}>
+          <Link href={'/notifications'}>
             <NotificationIcon
               width={30}
               height={30}
@@ -68,52 +68,43 @@ const Navbar = () => {
       </div>
       {/* Desktop Nav */}
 
-      {/* Mobile Header */}
-      <div className="md:hidden w-full flex items-center justify-center py-6">
-        {/* <Image
-          src={'/Assets/img/threads-logo-png.webp'}
-          width={30}
-          height={30}
-        /> */}
-        <ThreadsLogo width={30} height={30} />
-      </div>
-      {/* Mobile Header */}
-
       {/* Mobile Nav */}
-      <div className="md:hidden fixed z-10 bottom-0 right-0 left-0 w-full p-4  flex border-t-[1px] border-opacity-60 justify-between border-t-white bg-threads-bg">
-        <Link href={'/'}>
-          <HomeIcon
-            width={30}
-            height={30}
-            color={pathname === '/' ? '#7F5AF0' : '#fff'}
-          />
-        </Link>
-        <Link href={'/'}>
-          <SearchIcon
-            width={30}
-            height={30}
-            color={pathname === '/search' ? '#7F5AF0' : '#fff'}
-          />
-        </Link>
-        <Link href={'/new-threads'}>
-          <AddIcon width={30} height={30} />
-        </Link>
-        <Link href={'/notifications'}>
-          <NotificationIcon
-            width={30}
-            height={30}
-            color={pathname === '/notifications' ? '#7F5AF0' : '#fff'}
-          />
-        </Link>
-        <Link href={'/profile/pixelpilot4'}>
-          <Image
-            src={'/Assets/img/user.png'}
-            width={35}
-            height={35}
-            className="rounded-full object-contain"
-          />
-        </Link>
-      </div>
+      {pathname !== '/new-threads' && (
+        <div className="md:hidden fixed z-10 bottom-0 right-0 left-0 w-full p-4  flex border-t-[1px] border-opacity-60 justify-between border-t-white bg-threads-bg">
+          <Link href={'/'}>
+            <HomeIcon
+              width={30}
+              height={30}
+              color={pathname === '/' ? '#7F5AF0' : '#fff'}
+            />
+          </Link>
+          <Link href={'/search'}>
+            <SearchIcon
+              width={30}
+              height={30}
+              color={pathname === '/search' ? '#7F5AF0' : '#fff'}
+            />
+          </Link>
+          <Link href={'/new-threads'}>
+            <AddIcon width={30} height={30} />
+          </Link>
+          <Link href={'/notifications'}>
+            <NotificationIcon
+              width={30}
+              height={30}
+              color={pathname === '/notifications' ? '#7F5AF0' : '#fff'}
+            />
+          </Link>
+          <Link href={'/profile/pixelpilot4'}>
+            <Image
+              src={'/Assets/img/user.png'}
+              width={35}
+              height={35}
+              className="rounded-full object-contain"
+            />
+          </Link>
+        </div>
+      )}
       {/* Mobile Nav */}
     </nav>
   );
