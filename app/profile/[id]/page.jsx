@@ -1,31 +1,57 @@
+'use client';
+
 import Image from 'next/image';
 
 import PostCard from '@components/PostCard';
 import Header from '@components/Header';
 
-export const metaData = {
-  title: 'Profile',
-  description: 'Profile page',
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+
+const PostCardList = () => {
+  const { data: session } = useSession();
+  const [threads, setThreads] = useState([]);
+
+  useEffect(() => {
+    const getThreads = async () => {
+      const response = await fetch(
+        `http://localhost:5000/v1/threads?username=${session?.user.username}`
+      );
+      const data = await response.json();
+      setThreads(data.data);
+    };
+
+    getThreads();
+  }, []);
+
+  return (
+    <>
+      {threads.map((thread) => (
+        <PostCard key={thread.id} post={thread} />
+      ))}
+    </>
+  );
 };
 
 const ProfilePage = () => {
+  const { data: session } = useSession();
   return (
     <>
       <Header />
       <section className="mt-4 max-w-xl mx-auto px-3 lg:mt-28 text-threads-white">
         <div className="flex w-full justify-between items-start">
           <div className="flex flex-col">
-            <h1 className="font-bold text-2xl">Barry Allen</h1>
+            <h1 className="font-bold text-2xl">{session?.user.name}</h1>
             <p>
-              pixelpilot4{' '}
+              @{session?.user.username}
               <span className="bg-threads-dark px-2 rounded-full text-sm text-threads-gray">
                 threadsclone.net
               </span>
             </p>
-            <p className="mt-4">Fastest Man Alive</p>
+            <p className="mt-4">Kang Ngoding</p>
           </div>
           <Image
-            src={'/Assets/img/user.png'}
+            src={session?.user.image}
             width={60}
             height={60}
             className="rounded-full object-contain"
@@ -35,7 +61,7 @@ const ProfilePage = () => {
           <div className="flex gap-1 text-sm">
             <p>123 Followers</p>
             <span className="text-threads-gray">•</span>
-            <p className="cursor-pointer">barryallen.net</p>
+            <p className="cursor-pointer">itzy.com</p>
           </div>
           <div className="bg-transparent outline outline-2 rounded-full">
             <Image
@@ -46,7 +72,7 @@ const ProfilePage = () => {
             />
           </div>
         </div>
-        <div className="mt-5 flex items-center text-center justify-between  text-threads-gray gap-1">
+        <div className="mt-5 flex items-center text-center justify-between text-threads-gray gap-1">
           <div className="flex-1 py-3 tab-active cursor-pointer">
             <h1>Threads</h1>
           </div>
@@ -55,76 +81,7 @@ const ProfilePage = () => {
           </div>
         </div>
         <section>
-          <PostCard
-            post={{
-              username: 'PixelPilot4',
-              time: '2h',
-              posts: {
-                text: 'Lorem ipsum dolor sit ame',
-                image: '/Assets/img/post1.png',
-                repliesCount: 10,
-                likesCount: 80,
-              },
-              rethread: true,
-            }}
-          />
-          <PostCard
-            post={{
-              username: 'PixelPilot4',
-              time: '2h',
-              posts: {
-                text: 'Lorem ipsum dolor sit ame',
-              },
-            }}
-          />
-          <PostCard
-            post={{
-              username: 'PixelPilot4',
-              time: '2h',
-              posts: {
-                text: 'Lorem ipsum dolor sit ame',
-                image: '/Assets/img/post2.png',
-                repliesCount: 1,
-                likesCount: 80,
-              },
-            }}
-          />
-          <PostCard
-            post={{
-              username: 'PixelPilot4',
-              time: '2h',
-              posts: {
-                text: 'Lorem ipsum dolor sit ame',
-              },
-            }}
-          />
-          <PostCard
-            post={{
-              username: 'PixelPilot4',
-              time: '2h',
-              posts: {
-                text: 'Lorem ipsum dolor sit ame',
-              },
-            }}
-          />
-          <PostCard
-            post={{
-              username: 'PixelPilot4',
-              time: '2h',
-              posts: {
-                text: 'Lorem ipsum dolor sit ame',
-              },
-            }}
-          />
-          <PostCard
-            post={{
-              username: 'PixelPilot4',
-              time: '2h',
-              posts: {
-                text: 'Lorem ipsum dolor sit ame',
-              },
-            }}
-          />
+          <PostCardList />
         </section>
       </section>
     </>
