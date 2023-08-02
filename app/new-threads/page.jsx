@@ -4,15 +4,39 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 import { SendIcon } from '@components/icons/SendIcon';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const NewThreadsPage = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [image, setImage] = useState(null);
+  const [fileImage, setFileImage] = useState(null);
+  const [thread, setThread] = useState('');
 
   const handleImage = (e) => {
     const file = e.target.files[0];
+    setFileImage(file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => setImage(reader.result);
+  };
+
+  const handleSubmit = async () => {
+    const newData = new FormData();
+    newData.append('userId', session?.user.id);
+    newData.append('thread', thread);
+    newData.append('image', fileImage);
+
+    const response = await fetch('http://localhost:5000/v1/threads', {
+      method: 'POST',
+      headers: new Headers({
+        Accept: '*/*',
+      }),
+      body: newData,
+    });
+    const data = await response.json();
+    router.push('/');
   };
 
   return (
@@ -21,17 +45,19 @@ const NewThreadsPage = () => {
         <div className="items-start gap-3 flex w-full justify-between">
           <div>
             <Image
-              src={'/Assets/img/user.png'}
+              src={session?.user.image}
               width={50}
               height={50}
               className="rounded-full object-contain"
             />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold">PixelPilot4</h3>
+            <h3 className="font-semibold">{session?.user.username}</h3>
             <textarea
               className="w-full bg-transparent p-1 h-[50px] text-threads-white font-lato resize-none outline-none border-none"
               placeholder="Start a thread"
+              onChange={(e) => setThread(e.target.value)}
+              value={thread}
             />
             <div className="flex items-center justify-between mt-[-12px]">
               <Image
@@ -49,7 +75,10 @@ const NewThreadsPage = () => {
               />
               {image && (
                 <Image
-                  onClick={() => setImage(null)}
+                  onClick={() => {
+                    setImage(null);
+                    setFileImage(null);
+                  }}
                   src={'/Assets/icon/Outline/Interface/Cross.svg'}
                   width={40}
                   height={40}
@@ -73,7 +102,15 @@ const NewThreadsPage = () => {
       </section>
       <div className="max-w-xl mx-auto fixed z-10 bottom-0 right-0 left-0 p-4 flex border-t-[1px] border-opacity-60 justify-between border-t-white bg-threads-bg">
         <p className="text-threads-white">Post Thread</p>
-        <SendIcon width={30} height={30} />
+        {thread.length > 0 || image ? (
+          <>
+            <button onClick={handleSubmit} className="cursor-pointer">
+              <SendIcon width={30} height={30} />
+            </button>
+          </>
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );
