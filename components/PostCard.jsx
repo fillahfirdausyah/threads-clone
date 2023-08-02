@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { convertTimestamp } from '@utils/convertTimestamp';
+import { useSession } from 'next-auth/react';
 
 import Image from 'next/image';
-import Link from 'next/link';
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, handleDeleteThread }) => {
+  const { data: session } = useSession();
   const ref = useRef(null);
   const [heightPostCard, setHeightPostCard] = useState(0);
   const [moreActionMenu, setMoreActionMenu] = useState(false);
@@ -24,20 +26,20 @@ const PostCard = ({ post }) => {
             width={22}
             height={22}
           />
-          <p>pixelpilot4 rethread</p>
+          <p>ryujin.itzy rethread</p>
         </div>
       )}
       <div className="flex items-start mt-2">
         <div className="flex flex-col items-center justify-end me-4">
           <div className="flex-1">
             <Image
-              src={'/Assets/img/user.png'}
+              src={`${post.creator.image}`}
               width={45}
               height={45}
               className="rounded-full cursor-pointer"
             />
           </div>
-          {post.posts.repliesCount > 0 && (
+          {post.repliesCount > 0 && (
             <>
               <div
                 className={`left-1/2 -ml-0.5 w-0.5 bg-gray-600 my-3`}
@@ -63,10 +65,12 @@ const PostCard = ({ post }) => {
         <div ref={ref} className="flex flex-col flex-1 relative">
           <div className="flex items-center justify-between">
             <h3 className="font-lato font-bold cursor-pointer">
-              {post.username}
+              {post.creator.username}
             </h3>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-threads-gray">{post.time}</span>
+              <span className="text-sm text-threads-gray">
+                {convertTimestamp(post.timestamp)}
+              </span>
               <Image
                 src={'/Assets/icon/Outline/Interface/Other-1.svg'}
                 width={20}
@@ -75,19 +79,26 @@ const PostCard = ({ post }) => {
                 onClick={() => setMoreActionMenu((prev) => !prev)}
               />
               {moreActionMenu && (
-                <div className="absolute right-0 top-5 w-40 p-2 flex flex-col gap-3 bg-threads-bg outline rounded-md outline-threads-white outline-1">
-                  <Link href={'/'}>Report</Link>
-                  <Link href={'/'}>Report</Link>
+                <div className="absolute right-0 top-5 w-52 p-3 flex flex-col gap-3 bg-threads-dark rounded-md">
+                  <p>Copy Link</p>
+                  {session?.user.id === post.creator._id && (
+                    <button
+                      onClick={handleDeleteThread(post._id)}
+                      className="post-separator p-2 w-full cursor-pointer text-red-500 hover:text-red-300"
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               )}
             </div>
           </div>
           <div className="text-left mt-1 cursor-pointer">
-            <p className="font-lato font-normal">{post.posts.text}</p>
+            <p className="font-lato font-normal">{post.thread}</p>
           </div>
-          {post.posts.image && (
+          {post.image && (
             <Image
-              src={post.posts.image}
+              src={`http://localhost:5000/images/${post.image}`}
               width={0}
               height={0}
               sizes="100vw"
@@ -121,7 +132,7 @@ const PostCard = ({ post }) => {
             />
           </div>
           <div className="flex items-center gap-1 mt-2">
-            {post.posts.repliesCount > 0 && (
+            {post.repliesCount > 0 && (
               <>
                 <span className="text-xs font-semibold text-threads-gray">
                   {post.posts.repliesCount > 1
@@ -132,7 +143,7 @@ const PostCard = ({ post }) => {
               </>
             )}
 
-            {post.posts.likesCount > 0 && (
+            {post.likesCount > 0 && (
               <span className="text-xs font-semibold text-threads-gray">
                 {post.posts.likesCount > 1
                   ? `${post.posts.likesCount} Likes`
