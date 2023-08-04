@@ -1,7 +1,6 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-
 import { ThreadsLogo } from '@components/icons/ThreadsLogo';
 
 const CoverPage = () => {
