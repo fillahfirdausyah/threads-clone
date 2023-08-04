@@ -33,7 +33,7 @@ const PostCard = ({ post, handleDeleteThread }) => {
         <div className="flex flex-col items-center justify-end me-4">
           <div className="flex-1">
             <Image
-              src={`${post.creator.image}`}
+              src={`${post.creator.image ? post.creator.image : '/Assets/img/user-placeholder.png'}`}
               width={45}
               height={45}
               className="rounded-full cursor-pointer"

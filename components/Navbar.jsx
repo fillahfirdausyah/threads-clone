@@ -103,7 +103,11 @@ const Navbar = () => {
               </Link>
               <Link href={`/profile/${session?.user.username}`}>
                 <Image
-                  src={session?.user.image}
+                  src={
+                    session?.user.image
+                      ? session?.user.image
+                      : '/Assets/img/user-placeholder.png'
+                  }
                   width={35}
                   height={35}
                   className="rounded-full object-contain"
