@@ -62,9 +62,9 @@ const Navbar = () => {
               <Link href={'/'}>
                 <FireIcon width={30} height={30} />
               </Link>
-              <Link href={'/profile/pixelpilot4'}>
+              <Link href={`/profile/${session?.user.username}`}>
                 <Image
-                  src={session?.user?.image}
+                  src={session?.user.image}
                   width={35}
                   height={35}
                   className="rounded-full object-contain"
@@ -103,11 +103,7 @@ const Navbar = () => {
               </Link>
               <Link href={`/profile/${session?.user.username}`}>
                 <Image
-                  src={
-                    session?.user.image
-                      ? session?.user.image
-                      : '/Assets/img/user-placeholder.png'
-                  }
+                  src={session?.user.image}
                   width={35}
                   height={35}
                   className="rounded-full object-contain"
