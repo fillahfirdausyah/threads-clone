@@ -29,7 +29,7 @@ const PostCardList = () => {
 
 const Feed = () => {
   return (
-    <div className="w-full mb-16 lg:mt-28">
+    <div className="w-full mb-16 lg:mt-4">
       <PostCardList />
     </div>
   );
