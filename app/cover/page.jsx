@@ -17,7 +17,7 @@ const CoverPage = () => {
 
         <button
           type="button"
-          onClick={() => signIn('credentials')}
+          onClick={() => signIn('google')}
           className="bg-threads-purple-500 w-40 h-10 px-3 py-1 rounded-md text-threads-white text-sm font-medium hover:bg-threads-purple-400 mt-16"
         >
           Let's Join

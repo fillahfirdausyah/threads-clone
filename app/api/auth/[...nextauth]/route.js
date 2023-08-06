@@ -11,51 +11,13 @@ const providers = [
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   }),
-  CredentialsProvider({
-    name: 'Credentials',
-    credentials: {
-      username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
-      password: { label: 'Password', type: 'password' },
-    },
-    authorize: async (credentials) => {
-      try {
-        const response = await fetch('http://localhost:5000/v1/auth/signin', {
-          method: 'POST',
-          body: JSON.stringify(credentials),
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        const user = await response.json();
-
-        if (user) {
-          return user;
-        } else {
-          return null;
-        }
-      } catch (error) {
-        const errorMessage = error.data.message;
-        console.log(errorMessage);
-      }
-    },
-  }),
 ];
 
 const handler = NextAuth({
   providers,
-  pages: {
-    signIn: '/auth/signIn',
-  },
   callbacks: {
-    async session({ session, token }) {
+    async session({ session }) {
       await connectToDatabase();
-
-      if (token) {
-        const sessionUser = await User.findOne({ email: token.email });
-        session.user.id = sessionUser._id.toString();
-        session.user.username = sessionUser.username;
-        session.user.fullname = sessionUser.fullname;
-        session.user.image = sessionUser.image;
-      }
 
       if (session) {
         const sessionUser = await User.findOne({ email: session.user.email });
@@ -66,12 +28,9 @@ const handler = NextAuth({
       }
       return session;
     },
-    async signIn({ user, profile }) {
+    async signIn({ profile }) {
       try {
         await connectToDatabase();
-        if (user) {
-          return user;
-        }
         // check if user already exists
         const userExist = await User.findOne({ email: profile.email });
         // if not, create new user
@@ -83,6 +42,8 @@ const handler = NextAuth({
             username = `${profile.name.split(' ')[0]}${
               profile.name.split(' ')[1]
             }_${random}`.toLowerCase();
+          } else {
+            username = profile.name.replace(' ', '').toLowerCase();
           }
           await User.create({
             email: profile.email,
@@ -96,13 +57,6 @@ const handler = NextAuth({
         console.log(error);
         return false;
       }
-    },
-    async jwt({ token, user, profile }) {
-      return {
-        ...token,
-        ...user,
-        ...profile,
-      };
     },
   },
 });
