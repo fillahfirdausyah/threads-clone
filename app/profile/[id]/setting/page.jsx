@@ -125,6 +125,7 @@ const ProfileSetting = ({ params }) => {
                   onChange={handleChange}
                   type="text"
                   className="bg-transparent outline outline-1 outline-threads-gray text-threads-gray h-10 text-sm py-[0.4rem] px-2 rounded-md w-full cursor-not-allowed"
+                  disabled
                 />
               </div>
               <div className="flex flex-col gap-3">
