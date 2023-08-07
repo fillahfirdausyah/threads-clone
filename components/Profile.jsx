@@ -3,8 +3,10 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
-const Profile = ({ children, userId, session, bio, link }) => {
+const Profile = ({ type, children, data }) => {
+  const { data: session } = useSession();
   const [moreActionMenu, setMoreActionMenu] = useState(false);
 
   const handleLogout = () => {
@@ -16,20 +18,18 @@ const Profile = ({ children, userId, session, bio, link }) => {
       <div className="flex w-full justify-between items-start">
         <div className="flex flex-col">
           <h1 className="font-bold text-2xl">
-            {session?.user.fullname
-              ? session?.user.fullname
-              : session?.user.name}
+            {type === 'My' ? session?.user.fullname : data.fullname}
           </h1>
           <p>
-            @{session?.user.username}
+            @{type === 'My' ? session?.user.username : data.username}
             <span className="bg-threads-dark px-2 rounded-full text-sm text-threads-gray">
               threadsclone.net
             </span>
           </p>
-          {bio && <p className="mt-4">{bio}</p>}
+          {data.bio && <p className="mt-4">{data.bio}</p>}
         </div>
         <Image
-          src={session?.user.image}
+          src={type === 'My' ? session?.user.image : data.image}
           width={60}
           height={60}
           className="rounded-full object-contain"
@@ -39,10 +39,10 @@ const Profile = ({ children, userId, session, bio, link }) => {
         <div className="flex gap-1 text-sm">
           <p>123 Followers</p>
           <span className="text-threads-gray">•</span>
-          {link !== 'undefined' ? (
+          {data.link !== 'undefined' ? (
             <p className="cursor-pointer">
-              <Link href={`http://${link}`} target="_blank">
-                {link}
+              <Link href={`http://${data.link}`} target="_blank">
+                {data.link}
               </Link>
             </p>
           ) : (
@@ -63,13 +63,25 @@ const Profile = ({ children, userId, session, bio, link }) => {
           </div>
           {moreActionMenu ? (
             <div className="absolute bg-threads-dark text-threads-white top-7 rounded-md w-44 p-3 right-0">
-              <button
-                type="button"
-                className="text-red-500 h-full w-full text-start hover:text-red-400"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
+              {type === 'My' ? (
+                <button
+                  type="button"
+                  className="text-red-500 h-full w-full text-start hover:text-red-400"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-threads-white h-full w-full text-start hover:text-threads-purple-400"
+                  onClick={() =>
+                    navigator.clipboard.writeText(window.location.href)
+                  }
+                >
+                  Copy Link Profile
+                </button>
+              )}
             </div>
           ) : (
             <> </>
@@ -77,7 +89,7 @@ const Profile = ({ children, userId, session, bio, link }) => {
         </div>
       </div>
       <div className="w-full flex gap-6 text-center mt-5">
-        {session?.user.username === userId && (
+        {session?.user.username === data.username && (
           <>
             <Link
               href={`/profile/${session?.user.username}/setting`}
@@ -90,13 +102,10 @@ const Profile = ({ children, userId, session, bio, link }) => {
             </button>
           </>
         )}
-        {session?.user.username !== userId && (
+        {session?.user.username !== data.username && (
           <>
             <button className="bg-threads-purple-500 py-1 px-7 rounded-md w-full hover:bg-threads-purple-400">
               Follow
-            </button>
-            <button className="bg-transparent outline outline-1 py-1 px-7 rounded-md w-full hover:bg-threads-purple-500 hover:outline-threads-purple-500">
-              Following
             </button>
           </>
         )}
