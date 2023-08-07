@@ -1,9 +1,16 @@
-import React from 'react';
+import { useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
 
 const Profile = ({ children, userId, session, bio, link }) => {
+  const [moreActionMenu, setMoreActionMenu] = useState(false);
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: '/' });
+  };
+
   return (
     <section className="mt-4 max-w-xl mx-auto px-3 lg:mt-28 text-threads-white">
       <div className="flex w-full justify-between items-start">
@@ -32,21 +39,41 @@ const Profile = ({ children, userId, session, bio, link }) => {
         <div className="flex gap-1 text-sm">
           <p>123 Followers</p>
           <span className="text-threads-gray">•</span>
-          {link && (
+          {link !== 'undefined' ? (
             <p className="cursor-pointer">
               <Link href={`http://${link}`} target="_blank">
                 {link}
               </Link>
             </p>
+          ) : (
+            <></>
           )}
         </div>
-        <div className="bg-transparent outline outline-2 rounded-full">
-          <Image
-            src={'/Assets/icon/Outline/Interface/Other-1.svg'}
-            width={25}
-            height={25}
-            className="cursor-pointer"
-          />
+        <div
+          className="flex flex-col items-center justify-between relative"
+          onClick={() => setMoreActionMenu((prev) => !prev)}
+        >
+          <div className="bg-transparent flex justify-center items-center h-6 w-6 outline outline-2 rounded-full">
+            <Image
+              src={'/Assets/icon/Outline/Interface/Other-1.svg'}
+              width={25}
+              height={25}
+              className="cursor-pointer"
+            />
+          </div>
+          {moreActionMenu ? (
+            <div className="absolute bg-threads-dark text-threads-white top-7 rounded-md w-44 p-3 right-0">
+              <button
+                type="button"
+                className="text-red-500 h-full w-full text-start hover:text-red-400"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <> </>
+          )}
         </div>
       </div>
       <div className="w-full flex gap-6 text-center mt-5">
@@ -82,7 +109,7 @@ const Profile = ({ children, userId, session, bio, link }) => {
           <h1>Replies</h1>
         </div>
       </div>
-      <section>{children}</section>
+      <section className="mb-16">{children}</section>
     </section>
   );
 };
