@@ -7,14 +7,14 @@ import Profile from '@components/Profile';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 
-const PostCardList = () => {
+const PostCardList = ({ username }) => {
   const { data: session } = useSession();
   const [threads, setThreads] = useState([]);
 
   useEffect(() => {
     const getThreads = async () => {
       const response = await fetch(
-        `http://localhost:5000/v1/threads?username=${session?.user.username}`
+        `http://localhost:5000/v1/threads?username=${username}`
       );
       const data = await response.json();
       setThreads(data.data);
@@ -35,19 +35,25 @@ const PostCardList = () => {
 const ProfilePage = ({ params }) => {
   const { data: session } = useSession();
   const [userData, setUserData] = useState({
+    fullname: '',
+    username: '',
     bio: '',
     link: '',
+    image: '',
   });
 
   useEffect(() => {
     const getUserDetail = async () => {
       const response = await fetch(
-        `http://localhost:5000/v1/users/${params.id}`
+        `http://localhost:5000/v1/users/${params.username}`
       );
       const data = await response.json();
       setUserData({
+        fullname: data.data.fullname,
+        username: data.data.username,
         bio: data.data.bio,
         link: data.data.link,
+        image: data.data.image,
       });
     };
 
@@ -57,12 +63,11 @@ const ProfilePage = ({ params }) => {
     <>
       <Header />
       <Profile
-        userId={params.id}
-        bio={userData.bio}
-        link={userData.link}
-        session={session}
+        username={params.username}
+        type={session?.user.username === params.username ? 'My' : 'Other'}
+        data={userData}
       >
-        <PostCardList />
+        <PostCardList username={params.username} />
       </Profile>
     </>
   );

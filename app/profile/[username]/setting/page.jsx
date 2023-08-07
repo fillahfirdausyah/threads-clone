@@ -20,7 +20,7 @@ const ProfileSetting = ({ params }) => {
   useEffect(() => {
     const getUserData = async () => {
       const response = await fetch(
-        `http://localhost:5000/v1/users/${params.id}`
+        `http://localhost:5000/v1/users/${params.username}`
       );
       const data = await response.json();
       setUserData({
@@ -53,7 +53,7 @@ const ProfileSetting = ({ params }) => {
       formData.append('link', userData.link);
 
       const response = await fetch(
-        `http://localhost:5000/v1/users/${params.id}`,
+        `http://localhost:5000/v1/users/${params.username}`,
         {
           method: 'PATCH',
           headers: new Headers({
@@ -76,7 +76,7 @@ const ProfileSetting = ({ params }) => {
       {/* <Header /> */}
       <nav className="md:hidden w-full flex items-center justify-between py-6">
         <div className="flex items-center gap-3">
-          <Link href={`/profile/${params.id}`}>
+          <Link href={`/profile/${params.username}`}>
             <Image
               src={'/Assets/icon/Outline/Interface/Cross.svg'}
               width={30}
