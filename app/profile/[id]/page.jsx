@@ -42,7 +42,7 @@ const ProfilePage = ({ params }) => {
   useEffect(() => {
     const getUserDetail = async () => {
       const response = await fetch(
-        `http://localhost:5000/v1/users/${session?.user.username}`
+        `http://localhost:5000/v1/users/${params.id}`
       );
       const data = await response.json();
       setUserData({
