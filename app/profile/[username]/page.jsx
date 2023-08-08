@@ -34,18 +34,21 @@ const PostCardList = ({ username }) => {
 
 const ProfilePage = ({ params }) => {
   const { data: session } = useSession();
+  const [fethingData, setFetchingData] = useState(false);
   const [userData, setUserData] = useState({
     fullname: '',
     username: '',
     bio: '',
     link: '',
     image: '',
+    isFollowed: false,
+    isFollowedMe: false,
   });
 
   useEffect(() => {
     const getUserDetail = async () => {
       const response = await fetch(
-        `http://localhost:5000/v1/users/${params.username}`
+        `http://localhost:5000/v1/users/${params.username}?user_id=${session?.user.id}`
       );
       const data = await response.json();
       setUserData({
@@ -54,11 +57,40 @@ const ProfilePage = ({ params }) => {
         bio: data.data.bio,
         link: data.data.link,
         image: data.data.image,
+        isFollowed: data.data.isFollowed,
+        isFollowedMe: data.data.isFollowedMe,
       });
     };
 
     getUserDetail();
-  }, []);
+  }, [fethingData]);
+
+  const handleFollow = async (username) => {
+    const userId = session?.user.id;
+    await fetch(`http://localhost:5000/v1/follow/${username}`, {
+      method: 'POST',
+      headers: new Headers({
+        Accept: '*/*',
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({ userId }),
+    });
+    setFetchingData((prev) => !prev);
+  };
+
+  const handleUnfollow = async (username) => {
+    const userId = session?.user.id;
+    await fetch(`http://localhost:5000/v1/unfollow/${username}`, {
+      method: 'DELETE',
+      headers: new Headers({
+        Accept: '*/*',
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({ userId }),
+    });
+    setFetchingData((prev) => !prev);
+  };
+
   return (
     <>
       <Header />
@@ -66,6 +98,8 @@ const ProfilePage = ({ params }) => {
         username={params.username}
         type={session?.user.username === params.username ? 'My' : 'Other'}
         data={userData}
+        handleFollow={handleFollow}
+        handleUnfollow={handleUnfollow}
       >
         <PostCardList username={params.username} />
       </Profile>

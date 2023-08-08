@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 
-const Profile = ({ type, children, data }) => {
+const Profile = ({ type, children, data, handleFollow, handleUnfollow }) => {
   const { data: session } = useSession();
   const [moreActionMenu, setMoreActionMenu] = useState(false);
 
@@ -104,9 +104,21 @@ const Profile = ({ type, children, data }) => {
         )}
         {session?.user.username !== data.username && (
           <>
-            <button className="bg-threads-purple-500 py-1 px-7 rounded-md w-full hover:bg-threads-purple-400">
-              Follow
-            </button>
+            {data.isFollowed ? (
+              <button
+                onClick={() => handleUnfollow && handleUnfollow(data.username)}
+                className="bg-transparent outline outline-1 py-1 px-7 rounded-md w-full hover:outline-threads-purple-400"
+              >
+                Following
+              </button>
+            ) : (
+              <button
+                onClick={() => handleFollow && handleFollow(data.username)}
+                className="bg-threads-purple-500 py-1 px-7 rounded-md w-full hover:bg-threads-purple-400"
+              >
+                {data.isFollowedMe ? 'Follow Back' : 'Follow'}
+              </button>
+            )}
           </>
         )}
       </div>
