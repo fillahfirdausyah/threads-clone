@@ -4,12 +4,27 @@ import { useState, useEffect } from 'react';
 import SearchCard from '@components/SearchCard';
 import { debounce } from '@utils/debounce';
 
-const SearchList = ({ data }) => {
+const SearchList = ({ filterRecentSearch, type, data }) => {
   return (
     <>
-      {data.map((user) => (
-        <SearchCard key={user.id} user={user} />
-      ))}
+      {type === 'RecentSearch' && data._id ? (
+        <SearchCard
+          user={data}
+          filterRecentSearch={filterRecentSearch}
+          type={type}
+        />
+      ) : (
+        <>
+          {data.map((user) => (
+            <SearchCard
+              key={user._id}
+              filterRecentSearch={filterRecentSearch}
+              user={user}
+              type={type}
+            />
+          ))}
+        </>
+      )}
     </>
   );
 };
@@ -30,7 +45,15 @@ const SearchPage = () => {
 
   const getRecentSearch = async () => {
     const recentSearch = JSON.parse(localStorage.getItem('recent-search'));
+    if (recentSearch === null) return setRecentSearch([]);
     setRecentSearch(recentSearch);
+  };
+
+  const filterRecentSearch = (id) => {
+    const recentSearch = JSON.parse(localStorage.getItem('recent-search'));
+    const newRecentSearch = recentSearch.filter((x) => x._id !== id);
+    localStorage.setItem('recent-search', JSON.stringify(newRecentSearch));
+    setRecentSearch(newRecentSearch);
   };
 
   useEffect(() => {
@@ -42,6 +65,7 @@ const SearchPage = () => {
     }, 500);
 
     setDebounceTimeoutId(newDounceTimeoutId);
+    getRecentSearch();
   }, [search]);
 
   return (
@@ -69,7 +93,11 @@ const SearchPage = () => {
               Recent Searches
             </h1>
             <div className="mt-5">
-              <SearchList data={recentSearch} />
+              <SearchList
+                filterRecentSearch={filterRecentSearch}
+                type={'RecentSearch'}
+                data={recentSearch}
+              />
             </div>
           </div>
         </>

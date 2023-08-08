@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-const SearchCard = ({ user }) => {
+const SearchCard = ({ filterRecentSearch, type, user }) => {
   const router = useRouter();
   const toProfile = () => {
     const recentSearch = JSON.parse(localStorage.getItem('recent-search'));
@@ -40,9 +40,21 @@ const SearchCard = ({ user }) => {
             {user.fullname}
           </h4>
         </div>
-        <button className="bg-threads-purple-500 px-3 py-1 rounded-md text-threads-white text-sm font-medium hover:bg-threads-purple-400">
-          Follow
-        </button>
+        {type === 'RecentSearch' ? (
+          <button
+            onClick={() => filterRecentSearch && filterRecentSearch(user._id)}
+          >
+            <Image
+              src={'/Assets/icon/Outline/Interface/Cross.svg'}
+              width={30}
+              height={30}
+            />
+          </button>
+        ) : (
+          <button className="bg-threads-purple-500 px-3 py-1 rounded-md text-threads-white text-sm font-medium hover:bg-threads-purple-400">
+            Follow
+          </button>
+        )}
       </div>
     </div>
   );
