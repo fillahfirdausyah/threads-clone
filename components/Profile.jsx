@@ -37,7 +37,9 @@ const Profile = ({ type, children, data, handleFollow, handleUnfollow }) => {
       </div>
       <div className="flex items-center justify-between mt-5 text-threads-gray">
         <div className="flex gap-1 text-sm">
-          <p>123 Followers</p>
+          <Link href={`/profile/${data.username}/social`}>
+            <p>{data.totalFollowers} Followers</p>
+          </Link>
           <span className="text-threads-gray">•</span>
           {data.link !== 'undefined' ? (
             <p className="cursor-pointer">

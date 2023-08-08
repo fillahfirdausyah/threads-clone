@@ -43,6 +43,7 @@ const ProfilePage = ({ params }) => {
     image: '',
     isFollowed: false,
     isFollowedMe: false,
+    totalFollowers: 0,
   });
 
   useEffect(() => {
@@ -59,6 +60,7 @@ const ProfilePage = ({ params }) => {
         image: data.data.image,
         isFollowed: data.data.isFollowed,
         isFollowedMe: data.data.isFollowedMe,
+        totalFollowers: data.data.totalFollowers,
       });
     };
 
