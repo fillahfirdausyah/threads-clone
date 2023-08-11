@@ -2,21 +2,22 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
+import { usePathname } from 'next/navigation';
 import { HomeIcon } from './icons/HomeIcon';
 import { NotificationIcon } from './icons/NotificationIcon';
 import { AddIcon } from './icons/AddIcon';
 import { FireIcon } from './icons/FireIcon';
 import { ThreadsLogo } from './icons/ThreadsLogo';
 import { SearchIcon } from './icons/SearchIcon';
-
 import { useSession } from 'next-auth/react';
+import { useNotifications } from '@utils/context/notificationsContext';
 
 const Navbar = () => {
   const { data: session } = useSession();
-
   const pathname = usePathname();
+  const { notificationsCounter } = useNotifications();
+
   return (
     <>
       {session?.user && (
@@ -94,12 +95,19 @@ const Navbar = () => {
               <Link href={'/new-threads'}>
                 <AddIcon width={30} height={30} />
               </Link>
-              <Link href={'/notifications'}>
+              <Link href={'/notifications'} className="relative">
                 <NotificationIcon
                   width={30}
                   height={30}
                   color={pathname === '/notifications' ? '#7F5AF0' : '#fff'}
                 />
+                {notificationsCounter > 0 ? (
+                  <div className="text-center absolute top-0 text-white text-xs w-4 h-4 bg-red-500 rounded-full">
+                    {notificationsCounter}
+                  </div>
+                ) : (
+                  <></>
+                )}
               </Link>
               <Link href={`/profile/${session?.user.username}`}>
                 <Image
