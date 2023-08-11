@@ -1,14 +1,14 @@
 import React from 'react';
 
 import Image from 'next/image';
-
 import ReferNotificationsCard from './ReferNotificationsCard';
+import { convertTimestamp } from '@utils/convertTimestamp';
 
 const NotificationsCard = ({ notifications }) => {
   return (
     <div className="flex justify-between items-start w-full gap-4 post-separator py-4 my-4">
       <Image
-        src={'/Assets/img/user.png'}
+        src={notifications.data.image}
         width={40}
         height={40}
         className="rounded-full object-contain"
@@ -29,10 +29,12 @@ const NotificationsCard = ({ notifications }) => {
               : 'flex flex-col items-start'
           }
         >
-          <h1 className="text-threads-white font-semibold">PixelPilot4</h1>
-          {notifications.type === 'follower' && (
+          <h1 className="text-threads-white font-semibold">
+            {notifications.data.username}
+          </h1>
+          {notifications.type === 'follow' && (
             <p className="text-threads-white text-opacity-60">
-              Followed you 2h ago
+              Followed you {convertTimestamp(notifications.timestamp)} ago
             </p>
           )}
           {notifications.type === 'likes' && (
@@ -52,10 +54,7 @@ const NotificationsCard = ({ notifications }) => {
             </>
           )}
         </div>
-        {/* <button className="bg-transparent outline outline-1 outline-threads-purple px-4 py-1 rounded-md text-threads-white">
-          Follow Back
-        </button> */}
-        {notifications.type === 'follower' && (
+        {notifications.type === 'follow' && (
           <button className="bg-threads-purple-500 px-3 py-1 rounded-md text-threads-white text-sm font-medium hover:bg-threads-purple-400">
             Follow Back
           </button>
