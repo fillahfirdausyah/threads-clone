@@ -2,6 +2,7 @@ import '@styles/global.css';
 import Navbar from '@components/Navbar';
 
 import Provider from '@components/Provider';
+import { NotificationsProvider } from '@utils/context/notificationsContext';
 
 export const metadata = {
   title: 'Threads Clone',
@@ -13,8 +14,10 @@ const RootLayout = ({ children }) => {
     <html lang="en" className="bg-threads-bg">
       <body className="font-lato">
         <Provider>
-          <Navbar />
-          <div className="px-2 relative">{children}</div>
+          <NotificationsProvider>
+            <Navbar />
+            <div className="px-2 relative">{children}</div>
+          </NotificationsProvider>
         </Provider>
       </body>
     </html>
