@@ -1,8 +1,9 @@
 'use client';
 
+import SocialCard from '@components/SocialCard';
+
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import SocialCard from '@components/SocialCard';
 
 const SocialPage = ({ params }) => {
   const { data: session } = useSession();
@@ -21,8 +22,8 @@ const SocialPage = ({ params }) => {
       setFollowersCount(data.data.length);
     };
 
-    getListResult();
-  }, [tabActive, fetchingData]);
+    session?.user && getListResult();
+  }, [session, tabActive, fetchingData]);
 
   const handleFollow = async (username) => {
     const userId = session?.user.id;

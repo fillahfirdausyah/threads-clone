@@ -64,8 +64,8 @@ const ProfilePage = ({ params }) => {
       });
     };
 
-    getUserDetail();
-  }, [fethingData]);
+    session?.user && getUserDetail();
+  }, [session, fethingData]);
 
   const handleFollow = async (username) => {
     const userId = session?.user.id;
