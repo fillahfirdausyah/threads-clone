@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import Header from '@components/Header';
-import CoverPage from './cover/page';
-import Feed from '@components/Feed';
+import Header from "@components/Header";
+import CoverPage from "./cover/page";
+import Feed from "@components/Feed";
 
-import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
-import { socket } from '@utils/socket';
-import { useNotifications } from '@utils/context/notificationsContext';
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { socket } from "@utils/socket";
+import { useNotifications } from "@utils/context/notificationsContext";
+import Navbar from "@components/Navbar";
 
 const HomePage = () => {
   const { data: session } = useSession();
@@ -16,11 +17,14 @@ const HomePage = () => {
   useEffect(() => {
     if (session?.user) {
       socket.connect();
-      socket.on('connect', () => {
-        socket.emit('registerUserToSocket', session?.user.id);
-        console.log('connected');
+      socket.on("connect", () => {
+        socket.emit("registerUserToSocket", session?.user.id);
+        console.log("connected");
       });
       socket.on(`notification:${session?.user.id}`, () => {
+        addNotificationCounter();
+      });
+      socket.on(`likesNotifications:${session?.user.id}`, (data) => {
         addNotificationCounter();
       });
     }
@@ -29,12 +33,15 @@ const HomePage = () => {
   return (
     <>
       {session?.user ? (
-        <main className="text-threads-white">
-          <Header />
-          <div className="flex max-w-xl mx-auto relative">
-            <Feed />
-          </div>
-        </main>
+        <>
+          <Navbar />
+          <main className="text-threads-white">
+            <Header />
+            <div className="relative mx-auto flex max-w-xl">
+              <Feed />
+            </div>
+          </main>
+        </>
       ) : (
         <CoverPage />
       )}
