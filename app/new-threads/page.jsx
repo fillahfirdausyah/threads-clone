@@ -1,9 +1,9 @@
 'use client';
-
-import { useState } from 'react';
-
 import Image from 'next/image';
+import HeaderNav from '@components/HeaderNav';
+
 import { SendIcon } from '@components/icons/SendIcon';
+import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
@@ -41,7 +41,8 @@ const NewThreadsPage = () => {
 
   return (
     <>
-      <section className="max-w-xl mx-auto px-6 mt-3 text-threads-white mb-20">
+      <HeaderNav title={'New Thread'} type={'Home'} />
+      <section className="max-w-xl mx-auto px-6 mt-16 text-threads-white mb-20">
         <div className="items-start gap-3 flex w-full justify-between">
           <div>
             <Image
@@ -59,7 +60,7 @@ const NewThreadsPage = () => {
               onChange={(e) => setThread(e.target.value)}
               value={thread}
             />
-            <div className="flex items-center justify-between mt-[-12px]">
+            <div className="flex items-center justify-between mt-3">
               <Image
                 onClick={() => document.querySelector('.input-field').click()}
                 src={'/Assets/icon/Outline/Interface/Attach.svg'}
@@ -100,7 +101,7 @@ const NewThreadsPage = () => {
           </div>
         )}
       </section>
-      <div className="max-w-xl mx-auto fixed z-10 bottom-0 right-0 left-0 p-4 flex border-t-[1px] border-opacity-60 justify-between border-t-white bg-threads-bg">
+      <div className="max-w-xl mx-auto fixed bottom-0 right-0 left-0 p-4 flex justify-between bg-threads-bg post-separator">
         <p className="text-threads-white">Post Thread</p>
         {thread.length > 0 || image ? (
           <>

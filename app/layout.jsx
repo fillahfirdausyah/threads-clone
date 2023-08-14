@@ -1,12 +1,11 @@
-import '@styles/global.css';
-import Navbar from '@components/Navbar';
+import "@styles/global.css";
 
-import Provider from '@components/Provider';
-import { NotificationsProvider } from '@utils/context/notificationsContext';
+import Provider from "@components/Provider";
+import { NotificationsProvider } from "@utils/context/notificationsContext";
 
 export const metadata = {
-  title: 'Threads Clone',
-  description: 'Let’s share what is in your mind with text based Social Media',
+  title: "Threads Clone",
+  description: "Let’s share what is in your mind with text based Social Media",
 };
 
 const RootLayout = ({ children }) => {
@@ -15,8 +14,7 @@ const RootLayout = ({ children }) => {
       <body className="font-lato">
         <Provider>
           <NotificationsProvider>
-            <Navbar />
-            <div className="px-2 relative">{children}</div>
+            <div className="relative">{children}</div>
           </NotificationsProvider>
         </Provider>
       </body>
