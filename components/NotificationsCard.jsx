@@ -1,51 +1,59 @@
-import React from 'react';
+import React from "react";
 
-import Image from 'next/image';
-import ReferNotificationsCard from './ReferNotificationsCard';
-import { convertTimestamp } from '@utils/convertTimestamp';
+import Image from "next/image";
+import ReferNotificationsCard from "./ReferNotificationsCard";
+import { convertTimestamp } from "@utils/convertTimestamp";
 
-const NotificationsCard = ({ notifications }) => {
+const NotificationsCard = ({ data }) => {
   return (
-    <div className="flex justify-between items-start w-full gap-4 post-separator py-4 my-4">
+    <div className="post-separator my-4 flex w-full items-start justify-between gap-4 py-4">
       <Image
-        src={notifications.data.image}
+        src={
+          data.notification.type === "follow"
+            ? data.notification.data.image
+            : data.notification.actionUser.image
+        }
         width={40}
         height={40}
         className="rounded-full object-contain"
       />
-      {notifications.likesCount > 2 && (
+      {data.likesCount > 2 && (
         <Image
-          src={'/Assets/img/user.png'}
+          src={"/Assets/img/user.png"}
           width={40}
           height={40}
-          className="rounded-full object-contain ms-[-45px] mt-2"
+          className="ms-[-45px] mt-2 rounded-full object-contain"
         />
       )}
-      <div className="flex flex-1 justify-between items-center">
+      <div className="flex flex-1 items-center justify-between">
         <div
           className={
-            notifications.type === 'likes' || notifications.type === 'comments'
-              ? 'flex flex-col items-start w-full'
-              : 'flex flex-col items-start'
+            data.notification.type === "like" ||
+            data.notification.type === "comments"
+              ? "flex w-full flex-col items-start"
+              : "flex flex-col items-start"
           }
         >
-          <h1 className="text-threads-white font-semibold">
-            {notifications.data.username}
+          <h1 className="font-semibold text-threads-white">
+            {data.notification.type === "follow"
+              ? data.notification.data.username
+              : data.notification.actionUser.username}
           </h1>
-          {notifications.type === 'follow' && (
+          {data.notification.type === "follow" && (
             <p className="text-threads-white text-opacity-60">
-              Followed you {convertTimestamp(notifications.timestamp)} ago
+              Followed you {convertTimestamp(data.notification.action_at)} ago
             </p>
           )}
-          {notifications.type === 'likes' && (
+          {data.notification.type === "like" && (
             <>
               <p className="text-threads-white text-opacity-60">
-                Likes your thread 2h ago
+                Like your thread {convertTimestamp(data.notification.action_at)}{" "}
+                ago
               </p>
-              <ReferNotificationsCard />
+              <ReferNotificationsCard data={data.notification.data} />
             </>
           )}
-          {notifications.type === 'comments' && (
+          {data.notification.type === "comments" && (
             <>
               <p className="text-threads-white text-opacity-60">
                 Comment your thread 2h ago
@@ -54,8 +62,8 @@ const NotificationsCard = ({ notifications }) => {
             </>
           )}
         </div>
-        {notifications.type === 'follow' && (
-          <button className="bg-threads-purple-500 px-3 py-1 rounded-md text-threads-white text-sm font-medium hover:bg-threads-purple-400">
+        {data.notification.type === "follow" && (
+          <button className="rounded-md bg-threads-purple-500 px-3 py-1 text-sm font-medium text-threads-white hover:bg-threads-purple-400">
             Follow Back
           </button>
         )}
