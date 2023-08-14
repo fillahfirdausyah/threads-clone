@@ -16,6 +16,10 @@
   border-top: 0.5px solid rgba(243, 245, 247, 0.15);
 }
 
+.header-separator {
+  border-bottom: 0.5px solid rgba(243, 245, 247, 0.15);
+}
+
 .cover {
   /* content: ''; */
   background-image: url('/Assets/img/background-cover-removebg-preview.png');
