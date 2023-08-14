@@ -1,25 +1,34 @@
-import React from 'react';
+import React from "react";
 
-import Image from 'next/image';
+import Image from "next/image";
+import { convertTimestamp } from "@utils/convertTimestamp";
 
-const ReferNotificationsCard = () => {
+const ReferNotificationsCard = ({ data }) => {
   return (
-    <div className="flex items-start w-full outline outline-0.5 outline-threads-gray text-threads-white rounded-md p-2 gap-3 mt-3">
+    <div className="mt-3 flex w-full items-start gap-3 rounded-md p-2 text-threads-white outline outline-0.5 outline-threads-gray">
       <Image
-        src={'/Assets/img/user.png'}
+        src={data.creator.image}
         width={35}
         height={35}
         className="rounded-full object-contain"
       />
-      <div className="flex flex-col w-full">
+      <div className="flex w-full flex-col">
         <div className="flex justify-between">
-          <h3 className="font-semibold">PixelPilot4</h3>
-          <span className="text-sm text-threads-gray">2h</span>
+          <h3 className="font-semibold">{data.creator.username}</h3>
+          <span className="text-sm text-threads-gray">
+            {convertTimestamp(data.timestamp)}
+          </span>
         </div>
-        <p className="text-start font-normal">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Soluta,
-          necessitatibus.
-        </p>
+        <p className="text-start font-normal">{data.thread}</p>
+        {data.image && (
+          <Image
+            src={`http://localhost:5000/images/${data.image}`}
+            width={0}
+            height={0}
+            sizes="100%"
+            className="mt-3 h-auto w-full rounded-xl"
+          />
+        )}
       </div>
     </div>
   );
