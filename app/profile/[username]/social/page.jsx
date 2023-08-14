@@ -1,6 +1,7 @@
 'use client';
 
 import SocialCard from '@components/SocialCard';
+import HeaderNav from '@components/HeaderNav';
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
@@ -53,13 +54,14 @@ const SocialPage = ({ params }) => {
 
   return (
     <section className="mt-4 max-w-xl mx-auto px-3 lg:mt-28 text-threads-white">
-      <nav className="flex items-center justify-between">
+      {/* <nav className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h1 className="text-base font-semibold">{params.username}</h1>
         </div>
         <button>Sort</button>
-      </nav>
-      <div className="mt-5 tab">
+      </nav> */}
+      <HeaderNav title={params.username} type={'back'} />
+      <div className="mt-14 tab">
         <div
           onClick={() => setTabActive('Followers')}
           className={
