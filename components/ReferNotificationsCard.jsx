@@ -3,11 +3,15 @@ import React from "react";
 import Image from "next/image";
 import { convertTimestamp } from "@utils/convertTimestamp";
 
-const ReferNotificationsCard = ({ data }) => {
+const ReferNotificationsCard = ({ type, data }) => {
   return (
     <div className="mt-3 flex w-full items-start gap-3 rounded-md p-2 text-threads-white outline outline-0.5 outline-threads-gray">
       <Image
-        src={data.creator.image}
+        src={
+          data.creator.image !== undefined
+            ? data.creator.image
+            : "/Assets/img/user.png"
+        }
         width={35}
         height={35}
         className="rounded-full object-contain"
