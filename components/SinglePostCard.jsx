@@ -5,8 +5,10 @@ import Image from "next/image";
 
 import { useState } from "react";
 import { convertTimestamp } from "@utils/convertTimestamp";
+import { useSession } from "next-auth/react";
 
 const SinglePostCard = ({ post }) => {
+  const { data: session } = useSession();
   const [moreActionMenu, setMoreActionMenu] = useState(false);
 
   return (
