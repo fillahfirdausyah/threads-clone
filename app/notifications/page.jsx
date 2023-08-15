@@ -13,7 +13,7 @@ const NotificationsPage = () => {
   const [notifications, setNotifications] = useState({
     follow: [],
     like: [],
-    comments: [],
+    comment: [],
   });
 
   useEffect(() => {
@@ -41,16 +41,13 @@ const NotificationsPage = () => {
         </div>
         <div className="mt-5">
           {notifications.follow.map((notification) => (
-            <NotificationsCard
-              key={notification._id}
-              data={{ type: "follow", notification }}
-            />
+            <NotificationsCard key={notification._id} data={notification} />
           ))}
           {notifications.like.map((notification) => (
-            <NotificationsCard
-              key={notification._id}
-              data={{ type: "follow", notification }}
-            />
+            <NotificationsCard key={notification._id} data={notification} />
+          ))}
+          {notifications.comment.map((notification) => (
+            <NotificationsCard key={notification._id} data={notification} />
           ))}
         </div>
       </section>
