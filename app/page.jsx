@@ -27,6 +27,9 @@ const HomePage = () => {
       socket.on(`likesNotifications:${session?.user.id}`, (data) => {
         addNotificationCounter();
       });
+      socket.on(`commentsNotifications:${session?.user.id}`, (data) => {
+        addNotificationCounter();
+      });
     }
   }, [session, notificationsCounter]);
 
