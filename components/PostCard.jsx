@@ -53,12 +53,12 @@ const PostCard = ({
               />
             </Link>
           </div>
-          {post.repliesCount > 0 && (
+          {post.totalComments > 0 && (
             <>
               <div
                 className={`left-1/2 my-3 -ml-0.5 w-0.5 bg-gray-600`}
                 style={
-                  post.posts.image
+                  post.image
                     ? {
                         height: `${heightPostCard - 97}px`,
                       }
@@ -66,12 +66,14 @@ const PostCard = ({
                 }
               ></div>
               <div className="flex-1">
-                <Image
-                  src={"/Assets/img/user.png"}
-                  width={25}
-                  height={25}
-                  className="cursor-pointer rounded-full"
-                />
+                {post.comments.length > 0 && (
+                  <Image
+                    src={post.comments[0].commenter_id.image}
+                    width={25}
+                    height={25}
+                    className="cursor-pointer rounded-full"
+                  />
+                )}
               </div>
             </>
           )}
@@ -143,6 +145,7 @@ const PostCard = ({
             />
             <Image
               className="cursor-pointer"
+              onClick={handleGoToPost}
               src={"/Assets/icon/Outline/Communication/Comment.svg"}
               width={30}
               height={30}
@@ -161,13 +164,23 @@ const PostCard = ({
             />
           </div>
           <div className="mt-2 flex items-center gap-1">
-            {post.repliesCount > 0 && (
+            {post.totalComments > 0 && (
               <>
-                <span className="text-xs font-semibold text-threads-gray">
-                  {post.posts.repliesCount > 1
-                    ? `${post.posts.repliesCount} Replies`
-                    : `${post.posts.repliesCount} Reply`}{" "}
-                </span>
+                {post.totalComments > 1 ? (
+                  <span
+                    onClick={handleGoToPost}
+                    className="cursor-pointer text-xs font-semibold text-threads-gray"
+                  >
+                    {post.totalComments} Replies
+                  </span>
+                ) : (
+                  <span
+                    onClick={handleGoToPost}
+                    className="cursor-pointer text-xs font-semibold text-threads-gray"
+                  >
+                    {post.totalComments} Reply
+                  </span>
+                )}
                 <span className="text-threads-gray">•</span>
               </>
             )}
