@@ -1,23 +1,24 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { SendIcon } from "@components/icons/SendIcon";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { socket } from "@utils/socket";
 
 import ChatInCard from "@components/ChatInCard";
 import ChatOutCard from "@components/ChatOutCard";
 
-const loopChat = ({ chats, session }) => {
+const loopChat = ({ chats, session, userData }) => {
   return (
     <>
       {chats.map((chat) => {
         if (chat.user_id === session?.user.id) {
           return <ChatOutCard message={chat.message} user={session} />;
         } else {
-          return <ChatInCard message={chat.message} user={chat.user_id} />;
+          return <ChatInCard message={chat.message} user={userData} />;
         }
       })}
     </>
@@ -27,11 +28,33 @@ const loopChat = ({ chats, session }) => {
 const MessageRoom = () => {
   const { data: session } = useSession();
   const { username } = useParams();
+  const chatRef = useRef(null);
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState([]);
   const [userData, setUserData] = useState({});
   const [fetchingData, setFetchingData] = useState(false);
+
+  useEffect(() => {
+    if (session?.user) {
+      socket.connect();
+      socket.on(`chat:${session?.user.id}`, (data) => {
+        console.log(data);
+        setChats((prev) => [...prev, data]);
+        scrollToBottom();
+      });
+    }
+
+    const fetchUserData = async () => {
+      const res = await fetch(
+        `http://localhost:5000/v1/users/${username}?userId=${session?.user.id}`,
+      );
+      const data = await res.json();
+      setUserData(data.data);
+    };
+    session?.user && fetchUserData();
+    scrollToBottom();
+  }, [session]);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -43,21 +66,16 @@ const MessageRoom = () => {
       setChats(data.chats);
     };
 
-    const fetchUserData = async () => {
-      const res = await fetch(
-        `http://localhost:5000/v1/users/${username}?userId=${session?.user.id}`,
-      );
-      const data = await res.json();
-      setUserData(data.data);
-    };
     session?.user && fetchChats();
-    session?.user && fetchUserData();
-  }, [session, fetchingData]);
+  }, [session]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chats, fetchingData]);
 
   const handleSendMessage = async (e) => {
     try {
       e.preventDefault();
-      const chatRoomId = `${session?.user.username}&${username}`;
       const res = await fetch(
         `http://localhost:5000/v1/chat/${session?.user.username}&${username}?userId=${session?.user.id}`,
         {
@@ -66,18 +84,20 @@ const MessageRoom = () => {
             Accept: "*/*",
             "Content-Type": "application/json",
           }),
-          body: JSON.stringify({ message, chatRoomId }),
+          body: JSON.stringify({ message }),
         },
       );
       const data = await res.json();
-      // setChats(data);
-      console.log(data);
       setMessage("");
     } catch (error) {
       console.log(error.message);
     } finally {
       setFetchingData((prev) => !prev);
     }
+  };
+
+  const scrollToBottom = () => {
+    chatRef.current.scrollTop = chatRef.current.scrollHeight;
   };
 
   return (
@@ -108,15 +128,18 @@ const MessageRoom = () => {
           />
         </div>
       </nav>
-      <section className="mb-20 mt-20 flex flex-col gap-8 px-2 text-white">
-        {!chats ? (
+      <section
+        className="mb-20 mt-20 flex flex-col gap-8 px-2 text-white"
+        ref={chatRef}
+      >
+        {chats.length === 0 ? (
           <>
             <div className="flex flex-col items-center justify-center gap-2">
               <span className="text-2xl font-bold">No Message</span>
             </div>
           </>
         ) : (
-          loopChat({ chats, session })
+          loopChat({ chats, session, userData })
           // <> </>
         )}
       </section>
