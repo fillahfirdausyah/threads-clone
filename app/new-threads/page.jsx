@@ -1,18 +1,18 @@
-'use client';
-import Image from 'next/image';
-import HeaderNav from '@components/HeaderNav';
+"use client";
+import Image from "next/image";
+import HeaderNav from "@components/HeaderNav";
 
-import { SendIcon } from '@components/icons/SendIcon';
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { SendIcon } from "@components/icons/SendIcon";
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const NewThreadsPage = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const [image, setImage] = useState(null);
   const [fileImage, setFileImage] = useState(null);
-  const [thread, setThread] = useState('');
+  const [thread, setThread] = useState("");
 
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -24,26 +24,26 @@ const NewThreadsPage = () => {
 
   const handleSubmit = async () => {
     const newData = new FormData();
-    newData.append('userId', session?.user.id);
-    newData.append('thread', thread);
-    newData.append('image', fileImage);
+    newData.append("userId", session?.user.id);
+    newData.append("thread", thread);
+    newData.append("image", fileImage);
 
-    const response = await fetch('http://localhost:5000/v1/threads', {
-      method: 'POST',
+    const response = await fetch("http://localhost:5000/v1/threads", {
+      method: "POST",
       headers: new Headers({
-        Accept: '*/*',
+        Accept: "*/*",
       }),
       body: newData,
     });
     const data = await response.json();
-    router.push('/');
+    router.push("/");
   };
 
   return (
     <>
-      <HeaderNav title={'New Thread'} type={'Home'} />
-      <section className="max-w-xl mx-auto px-6 mt-16 text-threads-white mb-20">
-        <div className="items-start gap-3 flex w-full justify-between">
+      <HeaderNav title={"New Thread"} type={"Home"} />
+      <section className="mx-auto mb-20 mt-16 max-w-xl px-6 text-threads-white">
+        <div className="flex w-full items-start justify-between gap-3">
           <div>
             <Image
               src={session?.user.image}
@@ -55,19 +55,27 @@ const NewThreadsPage = () => {
           <div className="flex-1">
             <h3 className="font-semibold">{session?.user.username}</h3>
             <textarea
-              className="w-full bg-transparent p-1 h-[50px] text-threads-white font-lato resize-none outline-none border-none"
+              className="h-[50px] w-full resize-none border-none bg-transparent p-1 font-lato text-threads-white outline-none"
               placeholder="Start a thread"
               onChange={(e) => setThread(e.target.value)}
               value={thread}
             />
-            <div className="flex items-center justify-between mt-3">
-              <Image
-                onClick={() => document.querySelector('.input-field').click()}
-                src={'/Assets/icon/Outline/Interface/Attach.svg'}
-                width={40}
-                height={40}
-                className="rounded-full object-contain mt-[-8px] hover:cursor-pointer"
-              />
+            <div className="mt-3 flex items-center justify-between">
+              <div className="flex w-full">
+                <Image
+                  onClick={() => document.querySelector(".input-field").click()}
+                  src={"/Assets/icon/Outline/Interface/Attach.svg"}
+                  width={40}
+                  height={40}
+                  className="mt-[-8px] rounded-full object-contain hover:cursor-pointer"
+                />
+                <Image
+                  src={"/Assets/icon/Outline/Devices/Video.svg"}
+                  width={40}
+                  height={40}
+                  className="mt-[-8px] rounded-full object-contain hover:cursor-pointer"
+                />
+              </div>
               <input
                 onChange={handleImage}
                 type="file"
@@ -80,28 +88,28 @@ const NewThreadsPage = () => {
                     setImage(null);
                     setFileImage(null);
                   }}
-                  src={'/Assets/icon/Outline/Interface/Cross.svg'}
+                  src={"/Assets/icon/Outline/Interface/Cross.svg"}
                   width={40}
                   height={40}
-                  className="cursor-pointer rounded-full object-contain mt-[-8px] hover:cursor-pointer"
+                  className="mt-[-8px] cursor-pointer rounded-full object-contain hover:cursor-pointer"
                 />
               )}
             </div>
           </div>
         </div>
         {image && (
-          <div className="w-full mt-3">
+          <div className="mt-3 w-full">
             <Image
               src={image}
               width={0}
               height={0}
               sizes="100vw"
-              className="w-full h-auto rounded-xl object-contain sm:mb-20"
+              className="h-auto w-full rounded-xl object-contain sm:mb-20"
             />
           </div>
         )}
       </section>
-      <div className="max-w-xl mx-auto fixed bottom-0 right-0 left-0 p-4 flex justify-between bg-threads-bg post-separator">
+      <div className="post-separator fixed bottom-0 left-0 right-0 mx-auto flex max-w-xl justify-between bg-threads-bg p-4">
         <p className="text-threads-white">Post Thread</p>
         {thread.length > 0 || image ? (
           <>
