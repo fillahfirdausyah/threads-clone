@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from "next/image";
+import Link from "next/link";
 
-import { usePathname } from 'next/navigation';
-import { HomeIcon } from './icons/HomeIcon';
-import { NotificationIcon } from './icons/NotificationIcon';
-import { AddIcon } from './icons/AddIcon';
-import { FireIcon } from './icons/FireIcon';
-import { ThreadsLogo } from './icons/ThreadsLogo';
-import { SearchIcon } from './icons/SearchIcon';
-import { useSession } from 'next-auth/react';
-import { useNotifications } from '@utils/context/notificationsContext';
+import { usePathname } from "next/navigation";
+import { HomeIcon } from "./icons/HomeIcon";
+import { NotificationIcon } from "./icons/NotificationIcon";
+import { AddIcon } from "./icons/AddIcon";
+import { FireIcon } from "./icons/FireIcon";
+import { ThreadsLogo } from "./icons/ThreadsLogo";
+import { SearchIcon } from "./icons/SearchIcon";
+import { useSession } from "next-auth/react";
+import { useNotifications } from "@utils/context/notificationsContext";
 
 const Navbar = () => {
   const { data: session } = useSession();
@@ -23,44 +23,44 @@ const Navbar = () => {
       {session?.user && (
         <nav className="w-full">
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center justify-between px-4 py-3 border-b-[1px] border-opacity-60 border-b-white fixed top-0 left-0 right-0 z-10 bg-threads-bg">
+          <div className="fixed left-0 right-0 top-0 z-10 hidden items-center justify-between border-b-[1px] border-b-white border-opacity-60 bg-threads-bg px-4 py-3 lg:flex">
             {/* Brand Image */}
             <div className="flex items-center gap-2">
               <ThreadsLogo width={30} height={30} />
-              <h1 className="font-semibold text-threads-white text-lg">
+              <h1 className="text-lg font-semibold text-threads-white">
                 Threads Clone
               </h1>
             </div>
 
             {/* Search Input */}
-            <div className="flex items-center my-0 ms-28 max-w-xl">
+            <div className="my-0 ms-28 flex max-w-xl items-center">
               <input
                 type="text"
-                className="bg-threads-dark px-4 py-2 w-[36rem] h-10  text-threads-white rounded-md focus:outline-none"
+                className="h-10 w-[36rem] rounded-md bg-threads-dark px-4  py-2 text-threads-white focus:outline-none"
                 placeholder="Search"
               />
             </div>
 
             {/* Nav Link and User area */}
-            <div className="flex justify-between w-72">
-              <Link href={'/'}>
+            <div className="flex w-72 justify-between">
+              <Link href={"/"}>
                 <HomeIcon
                   width={30}
                   height={30}
-                  color={pathname === '/' ? '#7F5AF0' : '#fff'}
+                  color={pathname === "/" ? "#7F5AF0" : "#fff"}
                 />
               </Link>
-              <Link href={'/notifications'}>
+              <Link href={"/notifications"}>
                 <NotificationIcon
                   width={30}
                   height={30}
-                  color={pathname === '/notifications' ? '#7F5AF0' : '#fff'}
+                  color={pathname === "/notifications" ? "#7F5AF0" : "#fff"}
                 />
               </Link>
-              <Link href={'/new-threads'}>
+              <Link href={"/new-threads"}>
                 <AddIcon width={30} height={30} />
               </Link>
-              <Link href={'/'}>
+              <Link href={"/"}>
                 <FireIcon width={30} height={30} />
               </Link>
               <Link href={`/profile/${session?.user.username}`}>
@@ -76,33 +76,33 @@ const Navbar = () => {
           {/* Desktop Nav */}
 
           {/* Mobile Nav */}
-          {pathname !== '/new-threads' && (
-            <div className="md:hidden fixed z-10 bottom-0 right-0 left-0 w-full p-4  flex border-t-[1px] border-opacity-60 justify-between border-t-white bg-threads-bg">
-              <Link href={'/'}>
+          {pathname !== "/new-threads" && (
+            <div className="fixed bottom-0 left-0 right-0 z-10 flex w-full justify-between  border-t-[1px] border-t-white border-opacity-60 bg-threads-bg p-4 md:hidden">
+              <Link href={"/"}>
                 <HomeIcon
                   width={30}
                   height={30}
-                  color={pathname === '/' ? '#7F5AF0' : '#fff'}
+                  color={pathname === "/" ? "#7F5AF0" : "#fff"}
                 />
               </Link>
-              <Link href={'/search'}>
+              <Link href={"/search"}>
                 <SearchIcon
                   width={30}
                   height={30}
-                  color={pathname === '/search' ? '#7F5AF0' : '#fff'}
+                  color={pathname === "/search" ? "#7F5AF0" : "#fff"}
                 />
               </Link>
-              <Link href={'/new-threads'}>
+              <Link href={"/new-threads"}>
                 <AddIcon width={30} height={30} />
               </Link>
-              <Link href={'/notifications'} className="relative">
+              <Link href={"/notifications"} className="relative">
                 <NotificationIcon
                   width={30}
                   height={30}
-                  color={pathname === '/notifications' ? '#7F5AF0' : '#fff'}
+                  color={pathname === "/notifications" ? "#7F5AF0" : "#fff"}
                 />
                 {notificationsCounter > 0 ? (
-                  <div className="text-center absolute top-0 text-white text-xs w-4 h-4 bg-red-500 rounded-full">
+                  <div className="absolute top-0 h-4 w-4 rounded-full bg-red-500 text-center text-xs text-white">
                     {notificationsCounter}
                   </div>
                 ) : (
