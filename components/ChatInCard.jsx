@@ -2,7 +2,7 @@ import React from "react";
 
 import Image from "next/image";
 
-const ChatInCard = ({ message }) => {
+const ChatInCard = ({ message, user }) => {
   return (
     <div class="chat-message">
       <div class="flex items-end">
@@ -14,7 +14,7 @@ const ChatInCard = ({ message }) => {
           </div>
         </div>
         <Image
-          src={"https://avatarfiles.alphacoders.com/257/257029.jpg"}
+          src={user.image}
           width={30}
           height={30}
           class="order-1 h-6 w-6 rounded-full"
