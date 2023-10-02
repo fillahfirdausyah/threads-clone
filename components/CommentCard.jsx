@@ -117,12 +117,12 @@ const CommentCard = ({ reply }) => {
               width={30}
               height={30}
             />
-            <Image
+            {/* <Image
               className="cursor-pointer"
               src={"/Assets/icon/Outline/Communication/Comment.svg"}
               width={30}
               height={30}
-            />
+            /> */}
             <Image
               className="cursor-pointer"
               src={"/Assets/icon/Outline/Communication/Forward.svg"}
